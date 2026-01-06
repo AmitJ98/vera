@@ -1,0 +1,45 @@
+[project]
+name = "sql-query-assistant"
+version = "1.0.1"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Tal Shapir", email = "talshapir@google.com" },
+]
+requires-python = ">=3.14"
+dependencies = [
+    "anyio>=4.12.0",
+    "pydantic>=2.12.5",
+    "pyyaml>=6.0.3",
+    "vera>=1.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.14.10",
+    "ty>=0.0.5",
+]
+
+[project.entry-points.vera]
+sql_query_assistant = "sql_query_assistant.plugin_impl"
+
+[build-system]
+requires = ["uv_build>=0.9.11,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = [
+    "--import-mode=importlib",
+]
+testpaths = [
+    "tests/",
+]
+
+[tool.uv.sources]
+vera = { path = "../../vera" }
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true

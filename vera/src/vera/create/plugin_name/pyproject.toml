@@ -1,0 +1,19 @@
+[project]
+name = "$project_name"
+version = "0.1.0"
+description = "$description"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "anyio>=4.8.0",
+    "pydantic>=2.12.5",
+    "pyyaml>=6.0.1",
+    "vera>=1.0.2",
+]
+
+[project.entry-points.vera]
+$plugin_name = "$plugin_name.plugin_impl"
+
+[build-system]
+requires = ["uv_build>=0.9.11,<0.10.0"]
+build-backend = "uv_build"

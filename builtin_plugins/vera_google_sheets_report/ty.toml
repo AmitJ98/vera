@@ -1,0 +1,8 @@
+[[overrides]]
+include = [
+    "src/vera_google_sheets_report/plugin_impl.py",
+    "tests/test_vera_google_sheets_report/test_plugin.py",
+]
+
+[overrides.rules]
+unresolved-attribute = "ignore"
