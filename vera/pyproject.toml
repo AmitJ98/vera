@@ -1,6 +1,6 @@
 [project]
 name = "vera"
-version = "1.0.2"
+version = "1.0.0"
 description = "AI Feature Test Engine"
 readme = "README.md"
 authors = [
