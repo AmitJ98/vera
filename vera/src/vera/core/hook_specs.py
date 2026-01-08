@@ -164,7 +164,7 @@ class PluginService[T_Input: TestCaseInput, T_Output: TestCaseOutput, T_Row: Csv
     @staticmethod
     @hook_spec
     def handle_config_command_display(config: VeraConfig) -> None:
-        """Allows plugins to display their specific configuration when 'eve config' is run without
+        """Allows plugins to display their specific configuration when 'vera config' is run without
         arguments.
         """
 

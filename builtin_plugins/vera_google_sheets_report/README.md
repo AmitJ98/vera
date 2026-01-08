@@ -62,7 +62,7 @@ vera config
 
 ### Publishing Results
 
-When you run `eve eval`, the results are automatically appended to your Google Sheet.
+When you run `vera test`, the results are automatically appended to your Google Sheet.
 
 #### Multi-Run Handling
 

@@ -16,13 +16,13 @@ The `vera` package is organized into several key modules:
     - `data_models/`: Pydantic models for test cases, inputs, outputs, and report rows.
     - `default_impl.py`: Provides default implementations for core hooks (e.g., LLM evaluation via
       Gemini).
-- **`eve.eval`**: Logic for executing evaluation suites.
-    - `evaluate.py`: The `EvaluationService` which manages the asynchronous execution of test cases
+- **`vera.vtest`**: Logic for executing evaluation suites.
+    - `vtest.py`: The `TestingService` which manages the asynchronous execution of test cases
       and result publishing.
-- **`eve.config`**: Implementation of the `eve config` CLI command.
-- **`eve.create`**: Logic for the `eve create` command, including plugin scaffolding templates.
-- **`eve.list`**: Implementation of the `eve list` CLI command.
-- **`eve.main`**: The entry point for the Typer CLI application.
+- **`vera.config`**: Implementation of the `vera config` CLI command.
+- **`vera.create`**: Logic for the `vera create` command, including plugin scaffolding templates.
+- **`vera.list`**: Implementation of the `vera list` CLI command.
+- **`vera.main`**: The entry point for the Typer CLI application.
 
 ## Internal Mechanics
 
@@ -30,8 +30,8 @@ The `vera` package is organized into several key modules:
 
 Eve uses [pluggy](https://pluggy.readthedocs.io/) for its hook-based architecture.
 
-- **Hook Specifications**: Defined in `eve.core.hook_specs.PluginService`.
-- **Registration**: Plugins are discovered via `setuptools` entry points under the `eve` group. The
+- **Hook Specifications**: Defined in `vera.core.hook_specs.PluginService`.
+- **Registration**: Plugins are discovered via `setuptools` entry points under the `vera` group. The
   `default_impl` is always registered first.
 - **Hook Calling**: The `PluginCreation.plugin_service` (a `pluggy.HookCaller`) is used throughout
   the app to trigger hooks.
@@ -40,7 +40,7 @@ Eve uses [pluggy](https://pluggy.readthedocs.io/) for its hook-based architectur
 
 The evaluation engine is built on `asyncio` and `anyio`.
 
-- `EvaluationService.evaluate()` uses `asyncio.TaskGroup` to run test cases in parallel.
+- `TestingService.run_tests()` uses `asyncio.TaskGroup` to run test cases in parallel.
 - Each test case execution is isolated and includes a configurable timeout.
 - Hooks that interact with the LLM or external services are typically `async`.
 
@@ -56,29 +56,28 @@ The evaluation engine is built on `asyncio` and `anyio`.
 From the project root:
 
 ```bash
-uv pip install -e ./eve
+uv pip install vera
 ```
 
 ### Running Tests
 
-Tests are located in `eve/tests`. We use `pytest` with `pytest-asyncio`.
+Tests are located in `vera/tests`. We use `pytest` with `pytest-asyncio`.
 
 ```bash
 # Run all core tests
-export PYTHONPATH=$(pwd)/eve/src:$(pwd)/packages/eve_logger/src
-python3 -m pytest eve/tests -p no:trio
+cd vera
+uv sync
+source .venv/bin/activate
+pytest tests
 ```
-
-*Note: Some tests may fail if the `trio` plugin is active due to conflict with `asyncio` loops,
-hence `-p no:trio`.*
 
 ### Code Style
 
-We use `ruff` for linting and formatting. Configuration is found in `eve/ruff.toml`.
+We use `ruff` for linting and formatting. Configuration is found in `ruff.toml`.
 We use `ty` for static type checking.
 
 ## CLI Design
 
 The CLI is built with `typer`. Extra arguments not recognized by core commands are passed down to
-plugins via hooks (`handle_eve_eval_extra_args`, etc.), allowing plugins to extend the CLI
+plugins via hooks (`handle_test_command_extra_args`, etc.), allowing plugins to extend the CLI
 seamlessly.

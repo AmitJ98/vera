@@ -74,7 +74,7 @@ class GeminiConfig(LlmConfig):
 
         msg: str = (
             "Could not find a saved Gemini API key in the configuration. "
-            "Please configure it using 'eve config -k'."
+            "Please configure it using 'vera config -k'."
         )
         raise exceptions.ApiKeyNotFoundError(msg) from None
 
