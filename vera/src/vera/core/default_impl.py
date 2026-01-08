@@ -21,6 +21,7 @@ import anyio
 from rich.progress import Progress, TaskID  # noqa: TC002
 
 import vera
+from vera.project_name import PROJECT_NAME
 
 from . import constants
 from .configuration import CONFIG
@@ -34,7 +35,7 @@ from .hook_specs import PluginService  # noqa: TC001
 from .rich_cli_service import RichCliService
 from .write_results_to_file import write_to_file
 
-logger: logging.Logger = logging.getLogger(vera.PROJECT_NAME)
+logger: logging.Logger = logging.getLogger(PROJECT_NAME)
 
 
 @vera.hook_impl

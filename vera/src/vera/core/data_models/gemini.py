@@ -35,6 +35,7 @@ from google.genai.types import (
 from pydantic import BaseModel
 from tenacity import (
     after_log,
+    before_log,
     retry,
     retry_if_not_exception_type,
     stop_after_attempt,
@@ -105,6 +106,7 @@ class Gemini(LlmSdk):
         stop=stop_after_attempt(4),
         wait=wait_exponential(),
         after=after_log(logger, logging.DEBUG),
+        before=before_log(logger, logging.DEBUG),
     )
     async def send_message[T: BaseModel](
         self,
@@ -123,13 +125,18 @@ class Gemini(LlmSdk):
         self.contents.append(Content(role="user", parts=[Part.from_text(text=prompt)]))
 
         response: io.StringIO = io.StringIO()
-        async for chunk in await self.client.models.generate_content_stream(
-            model=self.model,
-            contents=self.contents,
-            config=config,
-        ):
-            if chunk.text:
-                response.write(chunk.text)
+        try:
+            async for chunk in await self.client.models.generate_content_stream(
+                model=self.model,
+                contents=self.contents,
+                config=config,
+            ):
+                if chunk.text:
+                    response.write(chunk.text)
+
+        except ClientError:
+            logger.exception("Failed to generate content")
+            raise
 
         text: str = response.getvalue()
         logger.debug("Response text: %s", text)
