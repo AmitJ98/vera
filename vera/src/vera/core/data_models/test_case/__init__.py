@@ -12,20 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Annotated
-
-from pydantic import BaseModel, Field, PositiveInt
-
 from .config import TestCaseConfig
 from .expected_output import ExpectedOutput
 from .input import TestCaseInput
+from .test_case import TestCase
 
-
-class TestCase[T_Input: TestCaseInput](BaseModel):
-    id: PositiveInt
-    name: str
-    description: str
-    input: T_Input
-    config: Annotated[TestCaseConfig, Field(default_factory=TestCaseConfig)]
-    tags: Annotated[list[str], Field(default_factory=list)]
-    expected_output: Annotated[ExpectedOutput | None, Field(default_factory=ExpectedOutput)]
+__all__: list[str] = [
+    "ExpectedOutput",
+    "TestCase",
+    "TestCaseConfig",
+    "TestCaseInput",
+]

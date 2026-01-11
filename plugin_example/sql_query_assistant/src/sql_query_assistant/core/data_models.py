@@ -16,8 +16,9 @@ from typing import Annotated, Self, override
 
 from pydantic import Field, PlainSerializer
 
-from sql_query_assistant.core import utils
 from vera import CsvColumn, CsvRow, ScoreRange, TestCase, TestCaseInput, TestCaseOutput
+
+from . import utils
 
 
 class SqlQueryInput(TestCaseInput):

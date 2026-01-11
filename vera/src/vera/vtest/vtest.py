@@ -51,6 +51,7 @@ class TestingService[
         self.csv_rows: list[T_Row] = []
         self.test_cases: Iterable[TestCase[T_Input]] = test_cases
         self.cli_service: CliService[Any, T_TaskId] = cli_service
+        self.failed_test_cases: list[tuple[TestCase, Exception]] = []
 
     async def run_tests(self) -> None:
         strict_errors: list[Exception] = []
@@ -177,6 +178,7 @@ class TestingService[
             completed=100,
         )
         logger.error("Test case %s reached timeout", test_case.id)
+        self.failed_test_cases.append((test_case, e))
         if test_case.config.strict_mode:
             msg: str = f"Failed to run test case {test_case.id}."
             raise exceptions.TestCaseTestingError(msg) from e
@@ -185,7 +187,8 @@ class TestingService[
         self.cli_service.update_task(
             task_id, description=f"Test {test_case.id}: [red]Error[/red]", completed=100
         )
-        logger.error("Error processing test case %s", test_case.id)
+        logger.error("Error processing test case %s", test_case.id, exc_info=e)
+        self.failed_test_cases.append((test_case, e))
         if test_case.config.strict_mode:
             msg: str = f"Failed to run test case {test_case.id}."
             raise exceptions.TestCaseTestingError(msg) from e

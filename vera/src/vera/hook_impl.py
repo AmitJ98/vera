@@ -12,6 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .typer_app import app
+from typing import TYPE_CHECKING
 
-__all__: list[str] = ["app"]
+import pluggy
+
+from .project_name import PROJECT_NAME
+
+if TYPE_CHECKING:
+    from pluggy import HookimplMarker
+
+hook_impl: HookimplMarker = pluggy.HookimplMarker(PROJECT_NAME)

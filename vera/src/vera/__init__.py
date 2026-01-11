@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
-
-import pluggy
-
 from .core.configuration import CONFIG, VeraConfig
 from .core.data_models.cli_service import CliService
 from .core.data_models.csv import CsvColumn, CsvRow, ScoreRange
@@ -27,12 +23,9 @@ from .core.data_models.test_case.expected_output import ExpectedOutput
 from .core.data_models.test_case.input import TestCaseInput
 from .core.data_models.test_case.load_methods import LoadMethods
 from .core.data_models.test_case.output import TestCaseOutput
+from .core.gemini import Gemini, GeminiConfig
+from .hook_impl import hook_impl
 from .project_name import PROJECT_NAME
-
-if TYPE_CHECKING:
-    from pluggy import HookimplMarker
-
-hook_impl: HookimplMarker = pluggy.HookimplMarker(PROJECT_NAME)
 
 __all__: list[str] = [
     "CONFIG",
@@ -41,6 +34,8 @@ __all__: list[str] = [
     "CsvColumn",
     "CsvRow",
     "ExpectedOutput",
+    "Gemini",
+    "GeminiConfig",
     "LlmConfig",
     "LlmSdk",
     "LoadMethods",

@@ -25,11 +25,11 @@ __all__: list[str] = ["setup_logging"]
 LOG_CONFIG_FILE_NAME: str = "logger_config.json"
 
 
-def setup_logging(level: str | None = None, *, verbose: bool = False) -> None:
+def setup_logging(level: str = "INFO", *, verbose: bool = False) -> None:
     """Setup logging configuration"""
     config_file: Path = Path(__file__).parent / LOG_CONFIG_FILE_NAME
     config: dict[str, Any] = json.loads(config_file.read_text(encoding="UTF-8"))
-    config["loggers"]["root"]["level"] = level or "INFO"
+    config["loggers"]["root"]["level"] = level
     config["handlers"]["console"]["show_path"] = verbose
 
     if _is_running_in_pytest():

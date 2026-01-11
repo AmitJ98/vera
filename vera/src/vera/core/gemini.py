@@ -46,8 +46,8 @@ from vera.core import exceptions
 from vera.core.configuration import VeraConfig
 from vera.project_name import PROJECT_NAME
 
-from .llm_config import LlmConfig
-from .llm_sdk import LlmSdk
+from .data_models.llm_config import LlmConfig
+from .data_models.llm_sdk import LlmSdk
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -69,7 +69,7 @@ class GeminiConfig(LlmConfig):
 
     @property
     def api_key(self) -> str:
-        config = VeraConfig.load()
+        config: VeraConfig = VeraConfig.load()
         if config.gemini_api_key:
             return config.gemini_api_key
 
@@ -114,16 +114,39 @@ class Gemini(LlmSdk):
         /,
         *,
         raise_error_if_empty_response: bool = False,
-        json_schema: type[T] | None = None,
+        response_json_schema: type[T] | None = None,
     ) -> T | str:
-        schema: str | None = None
-        if json_schema is not None:
-            schema: dict[str, Any] = json_schema.model_json_schema()
-
-        config: GenerateContentConfig = self.create_generate_content_config(schema)
         logger.debug("Sending prompt: %s", prompt)
         self.contents.append(Content(role="user", parts=[Part.from_text(text=prompt)]))
 
+        response: str = await self._generate_response(response_json_schema)
+        logger.debug("Response text: %s", response)
+        if raise_error_if_empty_response and not response:
+            msg: str = f"Received {response!r} from the LLM as generation results"
+            logger.error(msg)
+            raise ValueError(msg)
+
+        if response:
+            content: Content = Content(role="model", parts=[Part.from_text(text=response)])
+            self.contents.append(content)
+
+        if response_json_schema is not None and response:
+            try:
+                return response_json_schema.model_validate_json(response, by_alias=True)
+            except Exception:
+                logger.exception(
+                    "Failed to validate response against schema. Response text: %s", response
+                )
+                raise
+
+        return response
+
+    async def _generate_response(self, response_json_schema: type[BaseModel] | None) -> str:
+        schema: dict[str, Any] | None = None
+        if response_json_schema is not None:
+            schema = response_json_schema.model_json_schema()
+
+        config: GenerateContentConfig = self.create_generate_content_config(schema)
         response: io.StringIO = io.StringIO()
         try:
             async for chunk in await self.client.models.generate_content_stream(
@@ -138,20 +161,7 @@ class Gemini(LlmSdk):
             logger.exception("Failed to generate content")
             raise
 
-        text: str = response.getvalue()
-        logger.debug("Response text: %s", text)
-        if raise_error_if_empty_response and not text:
-            msg: str = f"Received {text!r} from the LLM as generation results"
-            raise ValueError(msg)
-
-        if text:
-            content = Content(role="migrator_assistant_llm", parts=[Part.from_text(text=text)])
-            self.contents.append(content)
-
-        if json_schema is not None and text:
-            return json_schema.model_validate_json(text, by_alias=True)
-
-        return text
+        return response.getvalue()
 
     async def close(self) -> None:
         self.clean_session_history()
@@ -171,7 +181,7 @@ class Gemini(LlmSdk):
 
     def create_generate_content_config(
         self,
-        response_json_schema: str | None = None,
+        response_json_schema: dict[str, Any] | None = None,
     ) -> GenerateContentConfig:
         response_mime_type: str = "plain/text"
         if response_json_schema is not None:

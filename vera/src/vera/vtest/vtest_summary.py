@@ -28,22 +28,35 @@ if TYPE_CHECKING:
 type _TestCaseIdToScoreRange = dict[int, ScoreRange]
 type _TestCaseIdToResults = dict[int, list[int | float]]
 
+ERR_MSG_MIN_MEN: int = 200
+
 
 class ReportSummary:
-    __slots__ = ("all_runs_rows", "ranges", "results")
+    __slots__ = ("all_runs_rows", "failed_tests", "ranges", "results")
 
-    def __init__(self, all_runs_rows: list[list[Any]]) -> None:
+    def __init__(
+        self,
+        all_runs_rows: list[list[Any]],
+        failed_tests: list[tuple[Any, Exception]] | None = None,
+    ) -> None:
         self.all_runs_rows: list[list[CsvRow]] = all_runs_rows
         self.results: _TestCaseIdToResults = defaultdict(list)
         self.ranges: _TestCaseIdToScoreRange = {}
+        self.failed_tests: list[tuple[Any, Exception]] = failed_tests or []
 
     def display(self) -> None:
+        if not self.all_runs_rows and not self.failed_tests:
+            return
+
+        console: Console = Console()
+        if self.failed_tests:
+            self._display_failures(console)
+
         if not self.all_runs_rows or not self.all_runs_rows[0]:
             return
 
         self._set_run_results_and_ranges()
         table: Table = self._build_summary_table()
-        console: Console = Console()
         console.print(table)
         if (score := self._get_overall_score()) is not None:
             console.print(score)
@@ -87,6 +100,21 @@ class ReportSummary:
                 table.add_row(str(test_id), avg_score_str)
 
         return table
+
+    def _display_failures(self, console: Console) -> None:
+        table: Table = Table(title="Failed Tests", header_style="bold red", style="red")
+        table.add_column("Test ID", style="cyan")
+        table.add_column("Error", style="white")
+
+        for test_case, error in self.failed_tests:
+            error_msg: str = str(error)
+            if len(error_msg) > ERR_MSG_MIN_MEN:
+                error_msg = f"{error_msg[: ERR_MSG_MIN_MEN - 3]}..."
+
+            table.add_row(str(test_case.id), error_msg)
+
+        console.print(table)
+        console.print()
 
     def _get_overall_score(self) -> str | None:
         all_scores: list[int | float] = [s for scores in self.results.values() for s in scores]

@@ -12,29 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-from typing import TYPE_CHECKING
 
-import typer
-
-from vera.core import plugin_service, utils
-from vera.project_name import PROJECT_NAME
-
-if TYPE_CHECKING:
-    from vera.core.plugin_service import PluginCreation
-
-app: typer.Typer = typer.Typer(help="List plugins.")
-logger: logging.Logger = logging.getLogger(PROJECT_NAME)
+from .typer_app import app
 
 __all__: list[str] = ["app"]
-
-
-@app.command(name="list", help="List all registered plugins")
-def list_plugins() -> None:
-    pc: PluginCreation = plugin_service.create_service()
-    names: str = utils.create_plugin_name_display_repr(pc.registered_plugin_names)
-    if not names:
-        logger.info("[red]No registered plugins found")
-        logger.info('Please use "uv pip install -e path/to/plugin" to install a plugin')
-    else:
-        logger.info("Registered plugins:\n%s", names)

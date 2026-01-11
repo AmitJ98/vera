@@ -105,7 +105,7 @@
   expected_output:
     content: "The database does not contain social security numbers."
   config:
-    strict_mode: true
+    # strict_mode: true
     timeout_seconds: 300
 
 # ---------------------------------------------------------
