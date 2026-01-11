@@ -7,12 +7,28 @@ authors = [
     { name = "Tal Shapir", email = "talshapir@google.com" },
 ]
 requires-python = ">=3.14"
+license-files = ["LICENSE"]
+license = "Apache-2.0"
 dependencies = [
     "google-api-python-client>=2.187.0",
     "google-auth-httplib2>=0.3.0",
     "google-auth-oauthlib>=1.2.3",
     "vera>=1.0.0",
 ]
+keywords = [
+    "vera",
+    "google sheets",
+    "plugin",
+]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+Repository = "https://github.com/google/vera"
 
 [dependency-groups]
 dev = [

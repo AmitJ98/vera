@@ -1,4 +1,4 @@
-# Vera – Your AI Feature Evaluation Tool
+# Vera – Your AI Feature Testing Tool
 
 ![Vera Logo](/docs/resources/vera_logo.png)
 
