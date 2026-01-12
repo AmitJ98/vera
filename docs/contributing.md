@@ -1,8 +1,6 @@
 # Contributing to Vera
 
-Thank you for your interest in contributing to Vera! We welcome contributions of all kinds,
-including
-bug fixes, new features, documentation improvements, and feedback.
+Thank you for your interest in contributing to Vera! We welcome contributions of all kinds, including bug fixes, new features, documentation improvements, and feedback.
 
 ## How to Contribute
 
@@ -12,7 +10,7 @@ Fork the repository on GitHub and clone it to your local machine.
 
 ### 2. Set Up Development Environment
 
-We use `uv` for dependency management.
+We use `uv` for dependency management. Run this from the project root:
 
 ```bash
 # Install dependencies
@@ -44,7 +42,7 @@ Ensure all tests pass before submitting your PR.
 uv run pytest vera/tests
 
 # Run built-in plugin tests
-uv run pytest builting_plugins/google_sheets_report/tests
+uv run pytest builtin_plugins/vera_google_sheets_report/tests
 ```
 
 ### 7. Submit a Pull Request
@@ -53,8 +51,7 @@ Push your branch to your fork and submit a PR to the main repository.
 
 ## Plugin Development
 
-If you are developing a new plugin, please refer to
-the [Plugin Development Guide](docs/plugin_development.md).
+If you are developing a new plugin, please refer to the [Plugin Development Guide](docs/plugin_development.md).
 
 ## Code Style
 

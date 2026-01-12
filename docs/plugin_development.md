@@ -1,12 +1,10 @@
 # Plugin Development Guide
 
-Vera uses a plugin-based architecture powered by [pluggy](https://pluggy.readthedocs.io/). This
-allows you to easily add support for new AI features by implementing a set of hooks.
+Vera uses a plugin-based architecture powered by [pluggy](https://pluggy.readthedocs.io/). This allows you to easily add support for new AI features by implementing a set of hooks.
 
 ## Plugin Architecture
 
-The following diagram illustrates the interaction between the Vera Engine and a Plugin during an
-test run:
+The following diagram illustrates the interaction between the Vera Engine and a Plugin during a test run:
 
 ```mermaid
 sequenceDiagram
@@ -68,14 +66,13 @@ my_awesome_feature/
 
 To create a functional plugin, you typically implement these hooks in `plugin_impl.py`:
 
-1. **`get_test_cases()`**: Loads your test cases (usually from `test_cases.yaml`).
-2. **`run_feature(test_case, resources_dir)`**: This is where you call your actual AI feature. It
-   should return a `TestCaseOutput`.
-3. **`run_static_tests(test_case, test_output)`**: Implement programmatic checks here
-   (e.g., "does the response contain a valid JSON?").
-4. **`get_csv_row_class()`**: Returns the Pydantic class used for a single row in the final report.
-5. **`get_llm_specs_dir()`**: Tells Vera where your Markdown specifications are located.
-6. **`publish_results(rows, run_index)`**: Called after testing to save results.
+1.  **`get_test_cases()`**: Loads your test cases (usually from `test_cases.yaml`).
+2.  **`run_feature(test_case, resources_dir)`**: This is where you call your actual AI feature. It should return a `TestCaseOutput`.
+3.  **`run_static_tests(test_case, test_output)`**: Implement programmatic checks here (e.g., "does the response contain a valid JSON?").
+4.  **`get_csv_row_class()`**: Returns the Pydantic class used for a single row in the final report.
+5.  **`get_llm_specs_dir()`**: Tells Vera where your Markdown specifications are located.
+    *   *Tip: Read the [Testing Philosophy](/docs/testing_philosophy.md) to understand how to write effective Specs (Rubrics, Safety Constraints, etc.).*
+6.  **`publish_results(rows, run_index)`**: Called after testing to save results.
 
 ## Advanced Extensibility
 
@@ -85,23 +82,16 @@ Vera allows plugins to extend the CLI and the global configuration.
 
 You can add custom CLI parameters to existing commands using the following hooks:
 
-- **`display_test_command_help(extra_args: list[str]) -> bool`**: Called to display help for `eval`.
-- **`handle_test_command_extra_args(extra_args: list[str])`**: Called to parse `eval` arguments.
-- **`display_config_command_help(extra_args: list[str]) -> bool`**: Called to display help for
-  `config`.
-- **`handle_config_command_extra_args(config: VeraConfig, extra_args: list[str])`**: Called to parse
-  `config` arguments.
+-   **`display_test_command_help(extra_args: list[str]) -> bool`**: Called to display help for `eval`.
+-   **`handle_test_command_extra_args(extra_args: list[str])`**: Called to parse `eval` arguments.
+-   **`display_config_command_help(extra_args: list[str]) -> bool`**: Called to display help for `config`.
+-   **`handle_config_command_extra_args(config: VeraConfig, extra_args: list[str])`**: Called to parse `config` arguments.
 
 **Important Requirements:**
 
-1. **Separation of Concerns:** One hook is responsible for displaying help, while the other handles
-   the actual parameter parsing and consumption.
-2. **Modify in place:** Your `handle_..._extra_args` implementation **must** remove the arguments it
-   recognizes from the
-   `extra_args` list. This allows Vera to detect unknown/unregistered options.
-3. **Help signal:** Your `display_..._help` implementation should check if its specific help flag (
-   e.g., `--my-plugin-help`) is present in `extra_args`, print the help message, remove the flag,
-   and return `True`.
+1.  **Separation of Concerns:** One hook is responsible for displaying help, while the other handles the actual parameter parsing and consumption.
+2.  **Modify in place:** Your `handle_..._extra_args` implementation **must** remove the arguments it recognizes from the `extra_args` list. This allows Vera to detect unknown/unregistered options.
+3.  **Help signal:** Your `display_..._help` implementation should check if its specific help flag (e.g., `--my-plugin-help`) is present in `extra_args`, print the help message, remove the flag, and return `True`.
 
 Example using `argparse`:
 
@@ -142,9 +132,7 @@ def extend_cli(app):
 
 ### Extending Configuration
 
-The `VeraConfig` object allows arbitrary extra fields. You can use the *
-*`update_config(config: VeraConfig)`** hook to set default values for your plugin-specific
-configuration.
+The `VeraConfig` object allows arbitrary extra fields. You can use the **`update_config(config: VeraConfig)`** hook to set default values for your plugin-specific configuration.
 
 ```python
 @vera.hook_impl
@@ -180,7 +168,4 @@ def run_static_tests(test_case, test_output):
 
 ## Reference Implementation
 
-For a complete, working example, see
-the [SQL Query Assistant](/plugin_example/sql_query_assistant/README.md) in the
-`plugin_example/`
-directory. It demonstrates complex data models, custom scoring, and resource management.
+For a complete, working example, see the [SQL Query Assistant](/plugin_example/vera_sql_query_assistant/README.md) in the `plugin_example/` directory. It demonstrates complex data models, custom scoring, and resource management.

@@ -1,8 +1,13 @@
 # Vera Core Package (`vera`)
 
-This directory contains the core engine of Vera, a plugin-based AI evaluation tool. This README is
-intended for developers working on the Vera engine itself. For usage instructions or plugin
-development, please refer to the [root README](README.md) and the [documentation](/docs).
+> ⚠️ **NOTICE: Internal Developer Documentation**
+>
+> This README is intended for contributors working on the **Vera Core Engine** itself.
+>
+> *   If you want to **use** Vera, please see the [Main README](../README.md) and [Installation Guide](../docs/installation_and_usage.md).
+> *   If you want to **write a plugin**, please see the [Plugin Development Guide](../docs/plugin_development.md).
+
+This directory contains the core engine of **Vera**, a plugin-based AI evaluation tool.
 
 ## Package Structure
 
@@ -10,7 +15,7 @@ The `vera` package is organized into several key modules:
 
 - **`vera.core`**: The heart of the engine.
     - `hook_specs.py`: Defines the `PluginService` protocol and all available hooks using `pluggy`.
-    - `configuration.py`: Manages global configuration (`EveConfig`), including loading/saving to
+    - `configuration.py`: Manages global configuration (`VeraConfig`), including loading/saving to
       `config.yaml`.
     - `plugin_service.py`: Handles plugin discovery and registration using `PluginManager`.
     - `data_models/`: Pydantic models for test cases, inputs, outputs, and report rows.
@@ -28,7 +33,7 @@ The `vera` package is organized into several key modules:
 
 ### Plugin System
 
-Eve uses [pluggy](https://pluggy.readthedocs.io/) for its hook-based architecture.
+Vera uses [pluggy](https://pluggy.readthedocs.io/) for its hook-based architecture.
 
 - **Hook Specifications**: Defined in `vera.core.hook_specs.PluginService`.
 - **Registration**: Plugins are discovered via `setuptools` entry points under the `vera` group. The
@@ -48,7 +53,7 @@ The evaluation engine is built on `asyncio` and `anyio`.
 
 ### Prerequisites
 
-- Python 3.14+
+- **Python 3.14+**
 - `uv` for dependency management.
 
 ### Setup

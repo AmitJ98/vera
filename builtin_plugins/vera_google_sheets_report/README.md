@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plugin extends `vera` to support publishing test results directly to Google Sheets. It
+This plugin extends **Vera** to support publishing test results directly to **Google Sheets**. It
 allows for multi-run reporting, with options to either keep runs in separate sheets or combine them
 into a single summary sheet.
 
@@ -17,10 +17,10 @@ into a single summary sheet.
 
 ## Installation
 
-Ensure the plugin is installed in your environment:
+Ensure the plugin is installed in your environment. From the project root:
 
 ```bash
-pip install builting_plugins/google_sheets_report
+uv pip install builtin_plugins/vera_google_sheets_report
 ```
 
 ## Configuration
