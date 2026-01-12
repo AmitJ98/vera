@@ -14,12 +14,12 @@
 
 from unittest.mock import MagicMock
 
-from sql_query_assistant.core.data_models import (
+from vera_sql_query_assistant.core.data_models import (
     SqlQueryOutput,
     SqlTestCase,
 )
-from sql_query_assistant.core.static_tests import StaticTester
-from sql_query_assistant.core.utils import average, bool_score_to_int_score
+from vera_sql_query_assistant.core.static_tests import StaticTester
+from vera_sql_query_assistant.core.utils import average, bool_score_to_int_score
 
 
 def test_average() -> None:

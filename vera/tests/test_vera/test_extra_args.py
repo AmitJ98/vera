@@ -33,10 +33,10 @@ def test_test_unknown_option() -> None:
 
         with (
             patch(
-                f"{PROJECT_NAME}.vtest._get_filtered_test_cases",
+                f"{PROJECT_NAME}.vtest.typer_app._get_filtered_test_cases",
                 return_value=[MagicMock()],
             ),
-            patch(f"{PROJECT_NAME}.vtest.Progress"),
+            patch(f"{PROJECT_NAME}.vtest.typer_app.Progress"),
         ):
             result = runner.invoke(app, ["test", "--unknown-opt"])
             assert result.exit_code == 1
@@ -81,12 +81,12 @@ def test_test_plugin_consumes_arg() -> None:
 
         with (
             patch(
-                f"{PROJECT_NAME}.vtest._get_filtered_test_cases",
+                f"{PROJECT_NAME}.vtest.typer_app._get_filtered_test_cases",
                 return_value=[MagicMock()],
             ),
-            patch(f"{PROJECT_NAME}.vtest.Progress"),
+            patch(f"{PROJECT_NAME}.vtest.typer_app.Progress"),
             patch(
-                f"{PROJECT_NAME}.vtest.TestingService.run_tests",
+                f"{PROJECT_NAME}.vtest.typer_app.TestingService.run_tests",
                 new_callable=AsyncMock,
             ),
         ):
