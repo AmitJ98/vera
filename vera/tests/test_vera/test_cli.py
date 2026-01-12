@@ -27,14 +27,14 @@ class TestCli:
         with patch("vera.core.plugin_service.create_service") as mock_create:
             mock_pc = MagicMock()
             mock_pc.registered_plugin_names = [
-                "sql_query_assistant",
+                "vera_sql_query_assistant",
                 f"{PROJECT_NAME}.core.default_impl",
             ]
             mock_create.return_value = mock_pc
 
             result = self.runner.invoke(app, ["list"])
             assert result.exit_code == 0
-            assert "sql_query_assistant" in result.output
+            assert "vera_sql_query_assistant" in result.output
 
     def test_list_plugins_none(self) -> None:
         with patch(f"{PROJECT_NAME}.core.plugin_service.create_service") as mock_create:

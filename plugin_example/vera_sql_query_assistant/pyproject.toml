@@ -1,5 +1,5 @@
 [project]
-name = "sql-query-assistant"
+name = "vera-sql-query-assistant"
 version = "1.0.0"
 description = "Example Vera implementation that provides tests for a SQL Query Assistant feature"
 readme = "README.md"
@@ -38,7 +38,7 @@ dev = [
 ]
 
 [project.entry-points.vera]
-sql_query_assistant = "sql_query_assistant.plugin_impl"
+vera_sql_query_assistant = "vera_sql_query_assistant.plugin_impl"
 
 [build-system]
 requires = ["uv_build>=0.9.11,<0.10.0"]

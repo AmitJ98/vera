@@ -1,6 +1,6 @@
 # SQL Query Assistant Plugin for Vera
 
-This repository contains the **SQL Query Assistant** plugin for the Vera AI test engine.
+This repository contains the **SQL Query Assistant** plugin for the **Vera** AI test engine.
 
 ## Overview
 
