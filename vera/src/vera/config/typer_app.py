@@ -29,6 +29,7 @@ logger: logging.Logger = logging.getLogger(PROJECT_NAME)
 class ConfigOptions(NamedTuple):
     dst_dir: Path | None
     gemini_api_key: str | None
+    report_name: str | None
     enable_csv: bool | None
     log_level: str | None
     context: typer.Context
@@ -38,6 +39,7 @@ class ConfigOptions(NamedTuple):
         return (
             self.dst_dir is None
             and self.gemini_api_key is None
+            and self.report_name is None
             and self.enable_csv is None
             and self.log_level is None
             and not self.context.args
@@ -49,7 +51,7 @@ class ConfigOptions(NamedTuple):
     help="Configure Vera default settings.",
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
 )
-def configure(
+def configure(  # noqa: PLR0913, PLR0917
     ctx: typer.Context,
     dst_dir: Annotated[
         Path | None,
@@ -72,6 +74,12 @@ def configure(
             prompt_required=False,
         ),
     ] = None,
+    report_name: Annotated[
+        str | None,
+        typer.Option(
+            help="The base name for the report file (default: report)",
+        ),
+    ] = None,
     enabled_csv: Annotated[
         bool | None,
         typer.Option(
@@ -91,6 +99,7 @@ def configure(
     options: ConfigOptions = ConfigOptions(
         dst_dir=dst_dir,
         gemini_api_key=gemini_api_key,
+        report_name=report_name,
         enable_csv=enabled_csv,
         log_level=log_level,
         context=ctx,
@@ -108,6 +117,10 @@ def _configure(options: ConfigOptions) -> None:
     if options.gemini_api_key is not None:
         config.gemini_api_key = options.gemini_api_key
         logger.info("Gemini API key saved.")
+
+    if options.report_name is not None:
+        config.report_name = options.report_name
+        logger.info("Report name set to: %s", options.report_name)
 
     if options.enable_csv is not None:
         config.enable_csv_report = options.enable_csv
@@ -149,6 +162,7 @@ def _configure(options: ConfigOptions) -> None:
                 "  Gemini API Key: %s",
                 "*******" if config.gemini_api_key else "Not set",
             )
+            logger.info("  Report Name: %s", config.report_name)
             logger.info("  CSV Report Enabled: %s", config.enable_csv_report)
             logger.info("  Log Level: %s", config.log_level)
             pc.plugin_service.handle_config_command_display(config=config)

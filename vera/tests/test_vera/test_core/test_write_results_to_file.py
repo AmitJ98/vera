@@ -79,6 +79,21 @@ async def test_create_report_file(tmp_path: pathlib.Path) -> None:
 
 
 @pytest.mark.anyio
+async def test_create_report_file_custom_name(tmp_path: pathlib.Path) -> None:
+    report_dir = Path(str(tmp_path))
+    config = VeraConfig(report_name="my_custom_report")
+
+    with patch(f"{PROJECT_NAME}.core.write_results_to_file.CONFIG", config):
+        file1 = await create_report_file(report_dir)
+        assert file1.name == "my_custom_report_1.csv"
+        assert await file1.exists()
+
+        file2 = await create_report_file(report_dir)
+        assert file2.name == "my_custom_report_2.csv"
+        assert await file2.exists()
+
+
+@pytest.mark.anyio
 async def test_write_to_file(tmp_path: pathlib.Path) -> None:
     report_dir = tmp_path / "reports"
     config = VeraConfig(dst_dir=report_dir)

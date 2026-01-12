@@ -101,6 +101,7 @@ Persistently configures Vera's default settings. Settings are stored in `config.
 
 - `-d, --dst-dir PATH`: Set the default destination directory for all future runs.
 - `-k, --gemini-api-key TEXT`: Securely set the Gemini API key.
+- `--report-name TEXT`: Set the base name for the report file (default: "report").
 - `--disable-csv / --enable-csv`: Toggle the default behavior for CSV report generation.
 - `-l, --log-level TEXT`: Set the default logging level (e.g., `DEBUG`, `INFO`, `WARNING`).
 

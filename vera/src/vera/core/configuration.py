@@ -30,6 +30,7 @@ class VeraConfig[T](BaseModel):
 
     dst_dir: Path | None = None
     gemini_api_key: str | None = None
+    report_name: str = "report"
     enable_csv_report: bool = True
     log_level: str = "INFO"
 

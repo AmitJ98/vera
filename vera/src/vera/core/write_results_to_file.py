@@ -29,8 +29,6 @@ if TYPE_CHECKING:
 
     from .data_models.csv import CsvRow
 
-REPORT_FILE_NAME: str = "report_{0}.csv"
-
 logger: logging.Logger = logging.getLogger(PROJECT_NAME)
 _file_lock = asyncio.Lock()
 
@@ -79,13 +77,14 @@ async def get_report_dir() -> Path:
 
 async def create_report_file(report_dir: Path) -> Path:
     count: int = 1
-    while await (report_dir / REPORT_FILE_NAME.format(count)).exists():
+    file_name_template: str = f"{CONFIG.report_name}_{{0}}.csv"
+    while await (report_dir / file_name_template.format(count)).exists():
         logger.debug(
             "Report file %s already exists, incrementing counter",
-            REPORT_FILE_NAME.format(count),
+            file_name_template.format(count),
         )
         count += 1
 
-    f: Path = report_dir / REPORT_FILE_NAME.format(count)
+    f: Path = report_dir / file_name_template.format(count)
     await f.touch()
     return f
